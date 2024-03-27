@@ -1,3 +1,3 @@
 class { 'tftp':
-  address => $::ipaddress,
+  address => $facts['networking']['ip'],
 }

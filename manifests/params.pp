@@ -8,12 +8,12 @@ class tftp::params {
   $binary     = '/usr/sbin/in.tftpd'
   $inetd      = true
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'debian': {
       $package  = 'tftpd-hpa'
       $defaults = true
       $username = 'tftp'
-      case $::operatingsystem {
+      case $facts['os']['name'] {
         'debian': {
           $directory  = '/srv/tftp'
           $hasstatus  = false
@@ -21,7 +21,7 @@ class tftp::params {
         }
         'ubuntu': {
           # ubuntu now uses systemd
-          if versioncmp($::operatingsystemrelease, '15.04') >= 0 {
+          if versioncmp($facts['os']['release']['full'], '15.04') >= 0 {
             $provider = 'systemd'
           } else {
             $provider   = 'upstart'
@@ -30,7 +30,7 @@ class tftp::params {
           $hasstatus  = true
         }
         default: {
-          fail "${::operatingsystem} is not supported"
+          fail "${facts['os']['name']} is not supported"
         }
       }
     }
@@ -48,7 +48,7 @@ class tftp::params {
       $defaults   = false
       $hasstatus  = false
       $provider   = undef
-      warning("tftp:: ${::operatingsystem} may not be supported")
+      warning("tftp:: ${facts['os']['name']} may not be supported")
     }
   }
 }
